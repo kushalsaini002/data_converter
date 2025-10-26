@@ -51,9 +51,9 @@ module conv_top;
       $dumpfile("conv_top.vcd");
       $dumpvars(0,conv_top);
       
-			uvm_config_db #(virtual conv_interface)::set(null,"*","vif",in0);
-      uvm_config_db #(virtual conv_interface)::set(null,"*","vif",in1);
-      uvm_config_db #(virtual conv_interface)::set(null,"*","vif",in2);
+			uvm_config_db #(virtual conv_interface)::set(null,"*","vif0",in0);
+      uvm_config_db #(virtual conv_interface)::set(null,"*","vif1",in1);
+      uvm_config_db #(virtual conv_interface)::set(null,"*","vif2",in2);
 			//Call run_test
       run_test("first_test");
 		end
