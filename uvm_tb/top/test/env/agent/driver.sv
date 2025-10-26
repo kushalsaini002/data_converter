@@ -1,4 +1,7 @@
 class driver extends uvm_driver #(transaction);
+
+    virtual conv_interface.DRV_MP vif;
+
     function new(string name="driver", uvm_component parent);
         super.new(name, parent);
     endfunction //new()
@@ -12,21 +15,22 @@ class driver extends uvm_driver #(transaction);
     endfunction // connect_phase()
 
     task run_phase(uvm_phase phase);
-        super.run_phase(phase);
-        fork
-            send_to_dut();
-        join_none
+        forever begin
+            seq_item_port.get_next_item(req);
+            send_to_dut(req);
+            seq_item_port.item_done();
+        end
     endtask // run_phase()
 
-    task send_to_dut();
-        transaction tr;
+    task send_to_dut(transaction drv_txn);
         forever begin
-            seq_item_port.get_next_item(tr);
-            // Send the transaction to the DUT
-            // (Assuming there's a method in the DUT interface to send data)
-            // dut_if.send_data(tr.data);
-            `uvm_info("DRIVER", $sformatf("Driving data: %0h", tr.data), UVM_LOW)
-            seq_item_port.item_done();
+            `uvm_info("DRIVER",$sformatf("printing from driver \n %s", drv_txn.sprint()),UVM_LOW)
+
+        @(vif.drv_cb);
+            vif.valid_in<=drv_txn.valid_in;
+            vif.data_in<=drv_txn.data_in;
+        repeat(10)
+            @(vif.drv_cb)
         end
     endtask // send_to_dut()
 endclass // driver extends uvm_driver #(transaction)

@@ -1,7 +1,7 @@
 class monitor extends uvm_monitor;
     `uvm_component_utils(monitor)
 
-    virtual dut_if vif;
+    virtual dut_if.mon_cb vif;
 
     uvm_analysis_port #(transaction) analysis_port;
 
@@ -18,10 +18,16 @@ class monitor extends uvm_monitor;
 
 
     task run_phase(uvm_phase phase);
-        sample();
+        forever begin
+            sample();
+        end
+        
     endtask // run_phase()
 
     task sample();
+        transaction mon_txn;
+        mon_txn=transaction::type_id::create("mon_txn");
 
+        @(posedge vif.mon_cb.valid_out)
     endtask
 endclass: monitor

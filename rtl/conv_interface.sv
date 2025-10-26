@@ -1,23 +1,28 @@
 interface conv_interface(input bit clk_in,input bit clk_out);
 
+  	logic rst;
     logic valid_in;
-    logic data_in[63:0];
+    logic [63:0]data_in;
     logic valid_out;
-    logic data_out[7:0];
+  logic [7:0]data_out;
     
-    bit clk_in,clk_out;
+   // bit clk_in,clk_out;
 
-    assign this.clk_in = clk_in;
-    assign this.clk_out = clk_out;
+    //assign clk_in = clk_in;
+    //assign clk_out = clk_out;
 
-    clocking drv_cb(@posedge clk_in);
-        default input #1 output #1;
+    clocking drv_cb@(posedge clk_in);
+        default input #1 output #0;
+      	output rst;
         output valid_in;
         output data_in;
     endclocking
 
-    clocking mon_cb(@posedge clk_out);
-        default input #1 output #1;
+    clocking mon_cb@(posedge clk_out);
+        default input #0 output #0;
+      	input rst;
+      	input valid_in;
+      	input data_in;
         input valid_out;
         input data_out;
     endclocking

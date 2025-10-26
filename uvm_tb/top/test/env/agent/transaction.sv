@@ -1,7 +1,9 @@
 class transaction extends uvm_sequence_item;
 
-  rand bit [63:0] data_in;
-  bit [7:0] data_out;
+    logic valid_in = 1'b1;
+    rand logic data_in[63:0];
+    logic valid_out=1'b1;
+    logic data_out[7:0];
 
   `uvm_object_utils(transaction)
 
